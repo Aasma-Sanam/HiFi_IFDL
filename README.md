@@ -35,22 +35,39 @@ Authors: [Xiao Guo](https://scholar.google.com/citations?user=Gkc-lAEAAAAJ&hl=en
 - Go to [HiFi_IFDL_weights_link](https://drive.google.com/drive/folders/1v07aJ2hKmSmboceVwOhPvjebFMJFHyhm?usp=sharing) to download the weights, and then put them in `weights`. 
 - The quick usage on HiFi_Net:
 ```python
-  from HiFi_Net import HiFi_Net 
-  from PIL import Image
-  import numpy as np
+from HiFi_Net import HiFi_Net
+from PIL import Image
+import numpy as np
+from matplotlib import pyplot as plt
+%matplotlib inline
 
-  HiFi = HiFi_Net()   # initialize
-  img_path = 'asset/sample_1.jpg'
+HiFi = HiFi_Net()   # initialize
+img_path = 'asset/sample_1.jpg'
 
-  ## detection
-  res3, prob3 = HiFi.detect(img_path)
-  # print(res3, prob3) 1 1.0
-  HiFi.detect(img_path, verbose=True)
+## Detection
+res3, prob3, class_name = HiFi.detect(img_path)
+print(res3, prob3, class_name)
+# HiFi.detect(img_path, verbose=True)
 
-  ## localization
-  binary_mask = HiFi.localize(img_path)
-  binary_mask = Image.fromarray((binary_mask*255.).astype(np.uint8))
-  binary_mask.save('pred_mask.png')
+## Localization
+binary_mask = HiFi.localize(img_path)
+binary_mask = Image.fromarray((binary_mask * 255.).astype(np.uint8))
+
+# Load original image
+original_image = Image.open(img_path)
+
+# Plot original image and its mask side by side
+fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+axes[0].imshow(original_image)
+axes[0].set_title('Original Image')
+axes[0].axis('off')
+
+axes[1].imshow(binary_mask, interpolation='nearest', cmap='gray')
+axes[1].set_title('Mask')
+axes[1].axis('off')
+
+plt.show()
+
 ```
 
 ### Quick Start of Source Code
